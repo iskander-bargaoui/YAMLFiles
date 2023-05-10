@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-db
+  labels:
+    app: web-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-db
+  template:
+    metadata:
+      labels:
+        app: web-db
+    spec:
+      containers:
+      - name: web-db
+        image: mysql
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: root
+        - name: MYSQL_DATABASE
+          value: my-database
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-db
+spec:
+  selector:
+    app: web-db
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+      nodePort: 30001

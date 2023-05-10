@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: web-front
+  labels:
+    app: web-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-front
+  template:
+    metadata:
+      labels:
+        app: web-front
+    spec:
+      containers:
+      - name: web-front
+        image: snitchy/front-app
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-front-service
+spec:
+  selector:
+    app: web-front
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30002
